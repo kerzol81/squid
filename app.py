@@ -7,10 +7,10 @@ import time
 import random
 import syslog
 
-QSERVER = '172.30.30.50'    # Q server
-QPORT = 37168               # telnet port
+QSERVER = '1.2.3.4'    # Q server
+QPORT = 23               # telnet port
 
-TSERVER = '172.30.30.201'   # Traccar server
+TSERVER = '5.6.7.8'   # Traccar server
 TPORT = 5055                # osmand port
 
 
