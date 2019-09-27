@@ -13,7 +13,7 @@ class Nmea:
                 if self.direction == 'E':
                     return round(dd + (ss / 60), 6)
                 elif self.direction == 'W':
-                    return round(dd + (ss / 60), 6) * -1
+                    return round(dd + (ss / 60, 6) * -1, 6)
                 else:
                     return '00.0000000'
             elif self.coordinate.find('.') is 4:
@@ -21,9 +21,9 @@ class Nmea:
                 dd = int(float(self.coordinate) / 100)
                 ss = float(self.coordinate) - dd * 100
                 if self.direction == 'N':
-                    return dd + (ss / 60)
+                    return round(dd + (ss / 60), 6)
                 elif self.direction == 'S':
-                    return dd + (ss / 60) * -1
+                    return round(dd + (ss / 60) * -1, 6)
                 else:
                     return '00.000000'
             else:
