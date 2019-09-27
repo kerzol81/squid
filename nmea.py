@@ -3,7 +3,6 @@ class Nmea:
         self.coordinate = coordinate
         self.direction = direction
 
-
     def convert_to_decimal(self):
         try:
             """ NMEA to Decimal Degrees"""
@@ -29,6 +28,3 @@ class Nmea:
                     return 00.0000
         except:
             return 00.00000
-
-n = Nmea('01323.629', 'W')
-print(n.convert_to_decimal())
