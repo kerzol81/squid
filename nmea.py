@@ -3,9 +3,9 @@ class Nmea:
         self.coordinate = coordinate
         self.direction = direction
 
+    """ NMEA to Decimal Degrees"""
     def convert_to_decimal(self):
         try:
-            """ NMEA to Decimal Degrees"""
             if self.coordinate.find('.') is 5:
                 """ longitude in the DDDMM.MMMMM format """
                 dd = int(float(self.coordinate[:3].strip('0')))
@@ -13,9 +13,9 @@ class Nmea:
                 if self.direction == 'E':
                     return round(dd + (ss / 60), 6)
                 elif self.direction == 'W':
-                    return round(dd + (ss / 60),6) * -1
+                    return round(dd + (ss / 60), 6) * -1
                 else:
-                    return 00.00000
+                    return 0.0
             if self.coordinate.find('.') is 4:
                 """  latitude in the DDMM.MMMMM format """
                 dd = int(float(self.coordinate) / 100)
@@ -25,6 +25,6 @@ class Nmea:
                 elif self.direction == 'S':
                     return round(dd + (ss / 60), 6) * -1
                 else:
-                    return 00.0000
+                    return 0.0
         except:
-            return 00.00000
+            return 0.0
