@@ -18,3 +18,5 @@ class TestNmeaConverter(unittest.TestCase):
     def test_valid_lon_2(self):
         n = Nmea('01323.629', 'W')
         self.assertAlmostEqual(n.convert_to_decimal(), -13.393817)
+        
+        
