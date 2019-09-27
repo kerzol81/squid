@@ -3,9 +3,8 @@ class Nmea:
         self.coordinate = coordinate
         self.direction = direction
 
-    @property
+
     def convert_to_decimal(self):
-        zero = '00.00000'
         try:
             """ NMEA to Decimal Degrees"""
             if self.coordinate.find('.') is 5:
@@ -13,22 +12,23 @@ class Nmea:
                 dd = int(float(self.coordinate[:3].strip('0')))
                 ss = float(self.coordinate) - dd * 100
                 if self.direction == 'E':
-                    result = str(round(dd + (ss / 60), 6))
+                    return round(dd + (ss / 60), 6)
                 elif self.direction == 'W':
-                    result = str(round(dd + (ss / 60, 6), 6) * -1)
+                    return round(dd + (ss / 60),6) * -1
                 else:
-                    result = zero
-                return result
+                    return 00.00000
             if self.coordinate.find('.') is 4:
                 """  latitude in the DDMM.MMMMM format """
                 dd = int(float(self.coordinate) / 100)
                 ss = float(self.coordinate) - dd * 100
                 if self.direction == 'N':
-                    result = str(round(dd + (ss / 60), 6))
+                    return round(dd + (ss / 60), 6)
                 elif self.direction == 'S':
-                    result = str(round(dd + (ss / 60), 6) * -1)
+                    return round(dd + (ss / 60), 6) * -1
                 else:
-                    result = zero
-                return result
+                    return 00.0000
         except:
-            return zero
+            return 00.00000
+
+n = Nmea('01323.629', 'W')
+print(n.convert_to_decimal())
