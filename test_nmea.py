@@ -20,6 +20,18 @@ class TestNmeaConverter(unittest.TestCase):
             Nmea('01323.629', 'A').convert_to_decimal()
 
         with self.assertRaises(TypeError):
+            Nmea('01323.629', 3).convert_to_decimal()
+
+        with self.assertRaises(TypeError):
+            Nmea('01323.629', True).convert_to_decimal()
+
+        with self.assertRaises(TypeError):
+            Nmea('01323.629', -1).convert_to_decimal()
+
+        with self.assertRaises(TypeError):
+            Nmea(True, False).convert_to_decimal()
+
+        with self.assertRaises(TypeError):
             Nmea('01323629', 'W').convert_to_decimal()
 
         with self.assertRaises(TypeError):
@@ -27,4 +39,3 @@ class TestNmeaConverter(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             Nmea('0132', 'W').convert_to_decimal()
-
