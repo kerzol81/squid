@@ -25,6 +25,6 @@ class TestNmeaConverter(unittest.TestCase):
         with self.assertRaises(TypeError):
             Nmea('01.323629', 'W').convert_to_decimal()
 
-            with self.assertRaises(TypeError):
-                Nmea('0132', 'W').convert_to_decimal()
+        with self.assertRaises(TypeError):
+            Nmea('0132', 'W').convert_to_decimal()
 
