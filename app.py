@@ -2,6 +2,9 @@
 
 # Production v. 1.1
 
+# TO DO
+# unittest all functions
+
 import requests
 import threading
 import telnetlib
