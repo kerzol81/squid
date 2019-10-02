@@ -18,7 +18,6 @@ TPORT = 5055
 log_to_syslog = True
 threads = 2
 
-
 def test_server(ip, port):
     try:
         connection = telnetlib.Telnet(ip, port, timeout=0.1)
@@ -98,7 +97,7 @@ def play():
             syslog.syslog('Q Server error: {}'.format(e))
         pass
     try:
-        message = str(connection.read_until(b'QQQ'))
+        message = str(connection.read_until(b'Q'))
 
     except Exception as e:
         if log_to_syslog:
@@ -133,9 +132,9 @@ def main():
             wait()
 
 
-threads = []
+thread_list = []
 
 for i in range(threads):
     t = threading.Thread(target=main)
-    threads.append(t)
+    thread_list.append(t)
     t.start()
