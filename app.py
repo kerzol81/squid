@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Production code v. 1.0
+
 import requests
 import threading
 import telnetlib
@@ -7,11 +9,14 @@ import time
 import random
 import syslog
 
-QSERVER = '1.2.3.4'    # Q server
-QPORT = 23             # telnet port
+QSERVER = '1.2.3.4'    
+QPORT = 23               
 
-TSERVER = '5.6.7.8'     # T server
-TPORT = 5055            # osmand port
+TSERVER = '5.6.7.8'  
+TPORT = 5055         
+
+log_to_syslog = True
+threads = 2
 
 
 def test_server(ip, port):
@@ -20,7 +25,8 @@ def test_server(ip, port):
         connection.read_very_lazy()
         return True
     except Exception as e:
-        syslog.syslog('[!] Server Error: {} IP: {} PORT: {}'.format(e, ip, port))
+        if log_to_syslog:
+            syslog.syslog('Server error: {} IP: {} PORT: {}'.format(e, ip, port))
         return False
 
 
@@ -58,8 +64,8 @@ def qtime_to_osmand_timestamp(qdate, qtime):
     return '{}-{}-{} {}:{}:{}'.format(year, month, day, hour, minute, second)
 
 
-def q_to_osmand_params(q_message):
-    chunks = q_message.split(',')
+def qsm_to_osmand_params(qsm_message):
+    chunks = qsm_message.split(',')
     params = {
         'id': '{}'.format(chunks[1].replace(':', '')),
         'name': '{}'.format(chunks[1]),
@@ -88,42 +94,48 @@ def play():
     try:
         connection = telnetlib.Telnet(QSERVER, QPORT, timeout=0.1)
     except Exception as e:
-        syslog.syslog('Q Server Error: {}'.format(e))
-
+        if log_to_syslog:
+            syslog.syslog('Q Server error: {}'.format(e))
+        pass
     try:
-        message = str(connection.read_until(b'AAA'))
+        message = str(connection.read_until(b'QEM'))
 
     except Exception as e:
-        syslog.syslog('Q Server Error: {}'.format(e))
+        if log_to_syslog:
+            syslog.syslog('Q server error, could not read Q message from telnet port, error: {}'.format(e))
         pass
 
     try:
         url = 'http://{}:{}/'.format(TSERVER, TPORT)
-        params = q_to_osmand_params(message)
+        params = qsm_to_osmand_params(message)
         r = requests.post(url, params, headers={'content-type': 'text/plain; charset=utf-8'})
     except Exception as e:
-        syslog.syslog('[-] T server error: {}'.format(e))
+        if log_to_syslog:
+            syslog.syslog('T server error, could not send HTTP post, error: {}'.format(e))
         pass
 
 
 def wait():
-    r = random.randint(1,30)
-    syslog.syslog('Initializing Squid Server, process starts in : {} seconds'.format(r))
+    r = random.randint(1, 60)
+    if log_to_syslog:
+        syslog.syslog('Initializing Squid daemon, process starts in : {} seconds, threads: {}'.format(r, threads))
     time.sleep(r)
 
-def worker():
+
+def main():
     wait()
     while True:
         if test_server(QSERVER, QPORT) and test_server(TSERVER, TPORT):
             play()
         else:
-            syslog.syslog('[!] Lost connection, reconnecting...')
+            if log_to_syslog:
+                syslog.syslog('Connection lost, reconnecting...')
             wait()
+
 
 threads = []
 
-for i in range(3):
-    t = threading.Thread(target=worker)
+for i in range(threads):
+    t = threading.Thread(target=main)
     threads.append(t)
     t.start()
-
